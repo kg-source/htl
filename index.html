@@ -1,280 +1,560 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saranda 55 | Ionian Oasis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap');
+    <head>
+        <meta charset="utf-8">
+        <title>Saranda 55 - Holiday Rental in Sarandë, Albania</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
+
+        <link href="img/favicon.ico" rel="icon">
+        <link href="img/apple-favicon.png" rel="apple-touch-icon">
+
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900" rel="stylesheet"> 
+
+        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="vendor/animate/animate.min.css" rel="stylesheet">
+        <link href="vendor/slick/slick.css" rel="stylesheet">
+        <link href="vendor/slick/slick-theme.css" rel="stylesheet">
+        <link href="vendor/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+        <link href="css/hover-style.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <meta name="google-adsense-account" content="ca-pub-4256467442087751">
+        <link rel="canonical" href="https://saranda55.eu/index.html" />
+        <meta name="p:domain_verify" content="4f7f3b664277c582b9723258fcbfedda"/>
         
-        body { 
-            margin: 0; 
-            background-color: #020617; 
-            color: white; 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
-        }
-        
-        /* Image Slider Background Layer */
-        #slider-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.4) saturate(1.1);
-            transition: background-image 1.5s ease-in-out;
-        }
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4256467442087751" crossorigin="anonymous"></script>
+    </head>
 
-        /* Manual Controls */
-        .slider-arrow {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 50;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            padding: 20px;
-            cursor: pointer;
-            border-radius: 50%;
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            user-select: none;
-        }
-        .slider-arrow:hover { background: rgba(255, 255, 255, 0.2); }
-        .arrow-left { left: 20px; }
-        .arrow-right { right: 20px; }
-
-        .slider-dots {
-            position: fixed;
-            bottom: 120px; /* Moved up as requested */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 50;
-            display: flex;
-            gap: 12px;
-        }
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .dot.active { background: white; width: 30px; border-radius: 10px; }
-
-        /* Floating Social Buttons Container */
-        .social-float-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .social-btn { 
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            transition: transform 0.3s, filter 0.3s; 
-        }
-        .social-btn:hover { transform: scale(1.1); filter: brightness(1.1); }
-
-        /* 3D Layer */
-        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .section-padding { padding: 100px 20px; }
-    </style>
-</head>
-<body>
-
-    <div id="slider-bg"></div>
-
-    <div class="slider-arrow arrow-left" onclick="manualChange(-1)">❮</div>
-    <div class="slider-arrow arrow-right" onclick="manualChange(1)">❯</div>
-    <div class="slider-dots" id="slider-dots"></div>
-
-    <div id="canvas-container"></div>
-
-    <div class="social-float-container">
-        <a href="https://www.instagram.com/saranda55_rental/" target="_blank" class="social-btn bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-        </a>
-        <a href="https://wa.me/355682089781" target="_blank" class="social-btn bg-[#25D366]">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.937 3.659 1.432 5.633 1.433h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-        </a>
-    </div>
-
-    <nav class="relative z-10 flex justify-between items-center p-8 max-w-7xl mx-auto">
-        <div class="text-2xl font-extrabold tracking-tighter uppercase">Saranda <span class="text-blue-500">55</span></div>
-        <div class="hidden md:flex gap-8 text-sm font-medium opacity-70">
-            <a href="#about" class="hover:text-blue-400 transition">About</a>
-            <a href="#contact" class="hover:text-blue-400 transition">Contact</a>
-        </div>
-    </nav>
-
-    <header id="about" class="relative z-10 min-h-[90vh] flex items-center px-8 max-w-7xl mx-auto">
-        <div class="max-w-4xl">
-            <h1 class="text-7xl md:text-9xl font-extrabold mb-6 leading-[0.9] tracking-tighter">
-                Saranda <span class="text-blue-500">55</span>
-            </h1>
-            <p class="text-gray-200 text-lg mb-8 max-w-md drop-shadow-lg">
-                Modern 3-bedroom luxury in the heart of Sarandë. Experience ultimate comfort with a lush private garden and panoramic Ionian views.
-            </p>
-            <div class="flex gap-4">
-                <a href="https://airbnb.com/h/saranda55" target="_blank" class="inline-block bg-white text-black font-bold py-4 px-10 rounded-full hover:bg-blue-500 hover:text-white transition-all transform hover:scale-105">
-                    Book on Airbnb
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <section id="contact" class="relative z-10 section-padding pb-40">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="glass p-12 rounded-[50px] border border-blue-500/30 shadow-2xl">
-                <h3 class="text-5xl font-black mb-8 text-blue-500 uppercase tracking-tighter">Saranda 55</h3>
-                <p class="text-gray-300 mb-12 max-w-lg mx-auto text-lg leading-relaxed">
-                    Ready to confirm your stay? Message us directly on WhatsApp for instant assistance or browse our official listing on Airbnb.
-                </p>
-                
-                <div class="flex flex-col md:flex-row justify-center items-center gap-6">
-                    <a href="https://wa.me/355682089781" class="w-full md:w-auto flex items-center justify-center gap-4 bg-[#25D366] px-10 py-6 rounded-2xl transition hover:brightness-110 transform hover:scale-105">
-                        <span class="text-3xl">💬</span>
-                        <div class="text-left">
-                            <p class="text-xs uppercase font-bold text-white/80 tracking-widest">Instant Chat</p>
-                            <p class="font-black text-2xl">WhatsApp</p>
-                        </div>
-                    </a>
-
-                    <a href="https://airbnb.com/h/saranda55" target="_blank" class="w-full md:w-auto flex items-center justify-center gap-4 bg-[#FF5A5F] px-10 py-6 rounded-2xl transition hover:brightness-110 transform hover:scale-105">
-                        <span class="text-3xl">🏠</span>
-                        <div class="text-left">
-                            <p class="text-xs uppercase font-bold text-white/80 tracking-widest">Official Listing</p>
-                            <p class="font-black text-2xl">Airbnb</p>
-                        </div>
-                    </a>
+    <body>
+        <header id="header">
+            <a href="index.html" class="logo"><img src="img/logo.jpg" alt="logo"></a>
+            <div class="phone"><i class="fa fa-phone"></i>+355 692089181</div>
+            <div class="mobile-menu-btn"><i class="fa fa-bars"></i></div>
+            <nav class="main-menu top-menu">
+                <ul>
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="room.html">Rooms</a></li>
+                    <li><a href="booking.html">Booking</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div id="headerSlider" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#headerSlider" data-slide-to="0" class="active"></li>
+                <li data-target="#headerSlider" data-slide-to="1"></li>
+                <li data-target="#headerSlider" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="img/slider/header-slider-1.jpg" alt="Saranda 55">
+                    <div class="carousel-caption">
+                        <h1 class="animated fadeInRight">Saranda 55</h1>
+                    </div>
                 </div>
                 
-                <p class="mt-8 text-gray-500 text-sm font-medium">355 68 208 9781</p>
+                <div class="carousel-item">
+                    <img src="img/slider/header-slider-2.jpg" alt="Saranda 55">
+                    <div class="carousel-caption">
+                        <h1 class="animated fadeInLeft">Saranda 55</h1>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <img src="img/slider/header-slider-3.jpg" alt="Saranda 55">
+                    <div class="carousel-caption">
+                        <h1 class="animated fadeInRight">Saranda 55</h1>
+                    </div>
+                </div>
+            </div>
+
+            <a class="carousel-control-prev" href="#headerSlider" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#headerSlider" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <div id="search">
+            <div class="container">
+                <div class="form-row">
+                    <div class="control-group col-md-3">
+                        <label>Check-In</label>
+                        <div class="form-group">
+                            <div class="input-group date" id="date-3" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#date-3"/>
+                                <div class="input-group-append" data-target="#date-3" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group col-md-3">
+                        <label>Check-Out</label>
+                        <div class="form-group">
+                            <div class="input-group date" id="date-4" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#date-4"/>
+                                <div class="input-group-append" data-target="#date-4" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group col-md-3">
+                        <div class="form-row">
+                            <div class="control-group col-md-6">
+                                <label>Adult</label>
+                                <select class="custom-select">
+                                    <option selected>0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+
+                                </select>
+                            </div>
+                            <div class="control-group col-md-6 kid">
+                                <label>Kid</label>
+                                <select class="custom-select">
+                                    <option selected>0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group col-md-3">
+                        <button class="btn btn-block">Search</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+        <div id="welcome">
+            <div class="container">
+                <h3>Welcome to Saranda 55</h3>
+                <p>Relax with the whole family in this peaceful accommodation.
+The accommodation located in Sarandë in the Vlorë County region and within 1.5 miles of Santa Quaranta Beach, Saranda 55 offers accommodation with free WiFi, a garden and free parking.</p>
+                <a href="booking.html">Book Now</a>
+            </div>
+        </div>
+        <div id="rooms">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Rooms</h2>
+                    <p>
+                        
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="room-img">
+                                    <div class="box12">
+                                        <img src="img/room/room-1.jpg">
+                                        <div class="box-content">
+                                            <h3 class="title">Bedroom 1</h3>
+                                            <ul class="icon">
+                                                <li><a href="#" data-toggle="modal" data-target="#modal-id"><i class="fa fa-link"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="room-des">
+                                    <h3><a href="#" data-toggle="modal" data-target="#modal-id">Bedroom 1</a></h3>
+                                    <p>  </p>
+                                    <ul class="room-size">
+                                        
+                                        <li><i class="fa fa-arrow-right"></i>Beds: 2 Single(s) </li>
+                                    </ul>
+                                    <ul class="room-icon">
 
-    <footer class="relative z-10 p-10 text-center text-gray-500 text-xs tracking-widest uppercase border-t border-white/5 bg-black/20">
-        © 2025 Saranda 55 Villa. All rights reserved.
-    </footer>
+                                        <li class="icon-2"></li>
+                                        <li class="icon-5"></li>
+                                        <li class="icon-6"></li>
+                                        <li class="icon-7"></li>
 
-    <script>
-        const images = [
-            'room-4.jpg', 
-            'room-5.jpg', 
-            'room-3.jpg', 
-            'room-2.jpg', 
-            'room-1.jpg'
-        ]; //
 
-        let currentImgIndex = 0;
-        let sliderInterval;
-        const sliderBg = document.getElementById('slider-bg');
-        const dotsContainer = document.getElementById('slider-dots');
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="room-rate">
+                                    <h3>From</h3>
+                                    <h1>30 Euro</h1>
+                                    <a href="booking.html">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="room-img">
+                                    <div class="box12">
+                                        <img src="img/room/room-2.jpg">
+                                        <div class="box-content">
+                                            <h3 class="title">Bedroom 2</h3>
+                                            <ul class="icon">
+                                                <li><a href="#" data-toggle="modal" data-target="#modal-id"><i class="fa fa-link"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="room-des">
+                                    <h3><a href="#" data-toggle="modal" data-target="#modal-id">Bedroom 2</a></h3>
+                                    <p>  </p>
+                                    <ul class="room-size">
 
-        // Create Navigation Dots
-        images.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (index === 0) dot.classList.add('active');
-            dot.onclick = () => jumpToImage(index);
-            dotsContainer.appendChild(dot);
-        });
+                                        <li><i class="fa fa-arrow-right"></i>Beds: 1 Double </li>
+                                    </ul>
+                                    <ul class="room-icon">
 
-        function updateSlider() {
-            sliderBg.style.backgroundImage = `url(${images[currentImgIndex]})`;
-            
-            // Update dots
-            document.querySelectorAll('.dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentImgIndex);
-            });
-        }
+                                        <li class="icon-2"></li>
+                                        <li class="icon-4"></li>
+                                        <li class="icon-5"></li>
+                                        <li class="icon-6"></li>
+                                        <li class="icon-7"></li>
+                                        <li class="icon-9"></li>
 
-        function manualChange(direction) {
-            clearInterval(sliderInterval);
-            currentImgIndex = (currentImgIndex + direction + images.length) % images.length;
-            updateSlider();
-            startAutoSlider();
-        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="room-rate">
+                                    <h3>From</h3>
+                                    <h1>30 Euro</h1>
+                                    <a href="booking.html">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="room-img">
+                                    <div class="box12">
+                                        <img src="img/room/room-3.jpg">
+                                        <div class="box-content">
+                                            <h3 class="title">Bedroom 3</h3>
+                                            <ul class="icon">
+                                                <li><a href="#" data-toggle="modal" data-target="#modal-id"><i class="fa fa-link"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="room-des">
+                                    <h3><a href="#" data-toggle="modal" data-target="#modal-id">Bedroom 3 </a></h3>
+                                    <p>  </p>
+                                    <ul class="room-size">
 
-        function jumpToImage(index) {
-            clearInterval(sliderInterval);
-            currentImgIndex = index;
-            updateSlider();
-            startAutoSlider();
-        }
+                                        <li><i class="fa fa-arrow-right"></i>Beds: 1 Double </li>
+                                    </ul>
+                                    <ul class="room-icon">
 
-        function startAutoSlider() {
-            sliderInterval = setInterval(() => {
-                currentImgIndex = (currentImgIndex + 1) % images.length;
-                updateSlider();
-            }, 6000);
-        }
+                                        <li class="icon-2"></li>
+                                        <li class="icon-5"></li>
+                                        <li class="icon-6"></li>
+                                        <li class="icon-7"></li>
 
-        updateSlider();
-        startAutoSlider();
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="room-rate">
+                                    <h3>From</h3>
+                                    <h1>30 Euro</h1>
+                                    <a href="booking.html">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="room-img">
+                                    <div class="box12">
+                                        <img src="img/room/room-4.jpg">
+                                        <div class="box-content">
+                                            <h3 class="title">Living Room</h3>
+                                            <ul class="icon">
+                                                <li><a href="#" data-toggle="modal" data-target="#modal-id"><i class="fa fa-link"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="room-des">
+                                    <h3><a href="#" data-toggle="modal" data-target="#modal-id">Living  Room</a></h3>
+                                    <p> Rent the whole house only for you </p>
+                                    <ul class="room-size">
 
-        // --- THREE.JS LOGIC ---
-        let scene, camera, renderer, photoPlane;
-        function init() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
+                                        <li><i class="fa fa-arrow-right"></i>Beds: 2 Sofas </li>
+                                    </ul>
+                                    <ul class="room-icon">
 
-            const loader = new THREE.TextureLoader();
-            const texture = loader.load('room-4.jpg');
-            const geometry = new THREE.PlaneGeometry(5, 3.3);
-            const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.95 });
-            
-            photoPlane = new THREE.Mesh(geometry, material);
-            photoPlane.position.x = window.innerWidth > 768 ? 3.8 : 0;
-            scene.add(photoPlane);
+                                        <li class="icon-2"></li>
+                                        <li class="icon-5"></li>
+                                        <li class="icon-6"></li>
+                                        <li class="icon-7"></li>
 
-            camera.position.z = 5;
-            animate();
-        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="room-rate">
+                                    <h3> From </h3>
+                                    <h1> 100 Euro </h1>
+                                    <a href="booking.html">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="room-img">
+                                    <div class="box12">
+                                        <img src="img/room/room-5.jpg">
+                                        <div class="box-content">
+                                            <h3 class="title">Kitchen</h3>
+                                            <ul class="icon">
+                                                <li><a href="#" data-toggle="modal" data-target="#modal-id"><i class="fa fa-link"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="room-des">
+                                    <h3><a href="#" data-toggle="modal" data-target="#modal-id">Kitchen</a></h3>
+                                    <p>Dishes and cutlery, Refrigerator, Microwave, Oven etc.</p>
+                                    <ul class="room-size">
 
-        function animate() {
-            requestAnimationFrame(animate);
-            const time = Date.now() * 0.0006;
-            photoPlane.rotation.y = Math.sin(time) * 0.12;
-            photoPlane.position.y = Math.cos(time * 0.4) * 0.12;
-            renderer.render(scene, camera);
-        }
+                                        <li><i class="fa fa-arrow-right"></i> All necessary amenities available. </li>
+                                    </ul>
+                                    <ul class="room-icon">
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            photoPlane.position.x = window.innerWidth > 768 ? 3.8 : 0;
-        });
-
-        init();
-    </script>
-</body>
+                                        <li class="icon-5"></li>
+                                        <li class="icon-7"></li>
+                                        <li class="icon-9"></li>
+                                        <li class="icon-10"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="room-rate">
+                                    <h3> </h3>
+                                    <h1> </h1>
+                                    <a href="booking.html">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modal-id" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="port-slider">
+                                    <div><img src="img/room-slider/room-1.jpg"></div>
+                                    <div><img src="img/room-slider/room-2.jpg"></div>
+                                    <div><img src="img/room-slider/room-3.jpg"></div>
+                                    <div><img src="img/room-slider/room-4.jpg"></div>
+                                    <div><img src="img/room-slider/room-5.jpg"></div>
+                                    <div><img src="img/room-slider/room-6.jpg"></div>
+                                </div>
+                                <div class="port-slider-nav">
+                                    <div><img src="img/room-slider/room-1.jpg"></div>
+                                    <div><img src="img/room-slider/room-2.jpg"></div>
+                                    <div><img src="img/room-slider/room-3.jpg"></div>
+                                    <div><img src="img/room-slider/room-4.jpg"></div>
+                                    <div><img src="img/room-slider/room-5.jpg"></div>
+                                    <div><img src="img/room-slider/room-6.jpg"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <h2>Online Booking</h2>
+                                <p>
+                                    Book online your room or the whole house only for you.
+                                </p>
+                                <div class="modal-link">
+                                    <a href="booking.html">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="subscribe">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Subscribe for Special Offer</h2>
+                    <p>
+                        
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="subscribe-form">
+                            <form action="https://formspree.io/f/mgegpobo" method="POST">
+                                <input type="hidden" name="_next" value="https://saranda55.eu/index.html">
+                                <input type="email" required="required" placeholder="Enter your email here" />
+                                <button>submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="booking">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Room Booking</h2>
+                    <p>
+                        Book online your room or the whole house only for you.
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="booking-form">
+                            <div id="success"></div>
+                            <form action="https://formspree.io/f/mgegpobo" method="POST">
+                                <input type="hidden" name="_next" value="https://saranda55.eu/index.html">
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label>First Name</label>
+                                        <input type="text" class="form-control" id="fname" placeholder="Enter your first name" required="required" data-validation-required-message="Please enter first name" />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                        <label>Last Name</label>
+                                        <input type="text" class="form-control" id="lname" placeholder="Enter your last name" required="required" data-validation-required-message="Please enter last name" />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label>Mobile</label>
+                                        <input type="text" class="form-control" id="mobile" placeholder="Enter your phone number with country code" required="required" data-validation-required-message="Please enter your mobile number" />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Enter your contact email" required="required" data-validation-required-message="Please enter your email" />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label>Check-In</label>
+                                        <input type="text" class="form-control datetimepicker-input" id="date-1" data-toggle="datetimepicker" data-target="#date-1" placeholder="E.g. MM/DD/YYYY" required="required" data-validation-required-message="Please enter date"/>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                        <label>Check-Out</label>
+                                        <input type="text" class="form-control datetimepicker-input" id="date-2" data-toggle="datetimepicker" data-target="#date-2" placeholder="E.g. MM/DD/YYYY" required="required" data-validation-required-message="Please enter date"/>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label>Requests</label>
+                                    <input type="text" class="form-control" id="request" placeholder="E.g. Special Request" required="required" data-validation-required-message="Please enter your special request" />
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                                <div class="button"><button type="submit" id="bookingButton">Book Now</button></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="call-us">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Click Below to message us via WhatsApp</h2>
+                    <p>
+                        Only WhatsApp messaging possible.
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <a href="https://wa.me/355692089181">+355 692089181</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="social">
+                            <a href="https://www.instagram.com/saranda55_rental/"><li class="fa fa-instagram"></li></a>
+                            <a href=""><li class="fa fa-facebook-f"></li></a>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <p>Copyright &#169; 2024 <a href="https://saranda55.eu">Saranda 55</a> All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+        
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/jquery/jquery-migrate.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="vendor/easing/easing.min.js"></script>
+        <script src="vendor/stickyjs/sticky.js"></script>
+        <script src="vendor/superfish/hoverIntent.js"></script>
+        <script src="vendor/superfish/superfish.min.js"></script>
+        <script src="vendor/wow/wow.min.js"></script>
+        <script src="vendor/slick/slick.min.js"></script>
+        <script src="vendor/tempusdominus/js/moment.min.js"></script>
+        <script src="vendor/tempusdominus/js/moment-timezone.min.js"></script>
+        <script src="vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+        
+        <script src="js/booking.js"></script>
+        <script src="js/jqBootstrapValidation.min.js"></script>
+  
+        <script src="js/main.js"></script>
+    </body>
 </html>
+
